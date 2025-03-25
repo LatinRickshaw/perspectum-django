@@ -20,7 +20,7 @@ class DataLoader:
 
 class LeaderboardService:
     @staticmethod
-    def get_leaderboard(min_submissions=3):
+    def get_leaderboard(min_submissions=3, max_submissions=24):
         users = User.objects.annotate(total_score=Sum('submissions__score'))
         filtered_users = []
         
@@ -29,7 +29,7 @@ class LeaderboardService:
             if len(submissions) < min_submissions:
                 continue
             
-            top_submissions = sorted(submissions, key=lambda x: x.score, reverse=True)[:24]
+            top_submissions = sorted(submissions, key=lambda x: x.score, reverse=True)[:max_submissions]
             total_score = sum(s.score for s in top_submissions)
             filtered_users.append((user.name, total_score))
         
