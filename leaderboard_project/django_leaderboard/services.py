@@ -20,13 +20,13 @@ class DataLoader:
 
 class LeaderboardService:
     @staticmethod
-    def get_leaderboard():
+    def get_leaderboard(min_submissions=3):
         users = User.objects.annotate(total_score=Sum('submissions__score'))
         filtered_users = []
         
         for user in users:
             submissions = list(user.submissions.all())
-            if len(submissions) < 3:
+            if len(submissions) < min_submissions:
                 continue
             
             top_submissions = sorted(submissions, key=lambda x: x.score, reverse=True)[:24]
